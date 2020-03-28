@@ -13,19 +13,19 @@ from msw import KafkaMicroservice
 
 
 class MyMicroservice(KafkaMicroservice):
-	def __init__(self):
-		super(KafkaMicroservice).__init__()
+    def __init__(self):
+        super(KafkaMicroservice).__init__()
 
-		self.next = 'next-topic'
+        self.next = 'next-topic'
 
-	def job(self, value):
-		self.logger.info(value)
-		return {'foo': 'bar'}
+    def job(self, value):
+        self.logger.info(value)
+        return {'foo': 'bar'}
 
 
 if __name__ == '__main__':
-	ms = MyMicroservice()
-	ms.run()
+    ms = MyMicroservice()
+    ms.run()
 ```
 
 <!-- ### ZMQMicroservice example:
@@ -35,19 +35,19 @@ from msw import ZMQMicroservice
 
 
 class MyMicroservice(ZMQMicroservice):
-	def __init__(self):
-		self.ENV = {
-			'CUSTOM_VAR': os.environ.get('CUSTOM_VAR')
-		}
+    def __init__(self):
+        self.ENV = {
+            'CUSTOM_VAR': os.environ.get('CUSTOM_VAR')
+        }
 
-		super(ZMQMicroservice).__init__()
+        super(ZMQMicroservice).__init__()
 
-		self.custom = self.ENV['CUSTOM_VAR']
+        self.custom = self.ENV['CUSTOM_VAR']
 
-	def job(self, value):
-		pass
+        def job(self, value):
+            pass
 
 if __name__ == '__main__':
-	ms = MyMicroservice()
-	ms.run()
+    ms = MyMicroservice()
+    ms.run()
 ``` -->
