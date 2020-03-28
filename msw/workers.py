@@ -20,7 +20,7 @@ logging.basicConfig(
 class KafkaMicroservice():
 	def __init__(self):
 
-		assert hasattr(self, 'topic') and isinstance(self.topic, str),
+		assert hasattr(self, 'topic') and isinstance(getattr(self, 'topic'), str),
 			'Please set self.topic to a valid string'
 
 		if not hasattr(self, 'ENV'):
