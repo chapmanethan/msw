@@ -13,7 +13,7 @@ logging.basicConfig(
 
 
 #-#-----------------------------------------------------------------------------
-class BaseMicroservice:
+class Microservice:
 	def __init__(self):
 		if not hasattr(self, 'ENV'):
 			self.ENV = {}

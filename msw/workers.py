@@ -5,14 +5,14 @@ import json
 import time
 import logging
 
-from .core import BaseMicroservice
+from .core import Microservice
 
 import zmq
 from kafka import KafkaProducer, KafkaConsumer
 
 
 #-#-----------------------------------------------------------------------------
-class KafkaMicroservice(BaseMicroservice):
+class KafkaMicroservice(Microservice):
 	def __init__(self):
 
 		assert hasattr(self, 'topic') and isinstance(getattr(self, 'topic'), str),
@@ -56,7 +56,7 @@ class KafkaMicroservice(BaseMicroservice):
 
 
 #-#-----------------------------------------------------------------------------
-class ZMQMicroservice(BaseMicroservice):
+class ZMQMicroservice(Microservice):
 	def __init__(self):
 		if not hasattr(self, 'ENV'):
 			self.ENV = {}
