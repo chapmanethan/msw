@@ -18,9 +18,10 @@ from msw import KafkaMicroservice
 
 class MyMicroservice(KafkaMicroservice):
     def __init__(self):
+        self.topic = 'my-topic'
+        self.next = ['next-topic']
         super(KafkaMicroservice).__init__()
 
-        self.next = 'next-topic'
 
     def job(self, value):
         self.logger.info(value)

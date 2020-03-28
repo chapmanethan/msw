@@ -57,9 +57,10 @@ class KafkaMicroservice():
 
 			result = job(value)
 
-			if hasattr(self, 'next') and isinstance(getattr(self, 'next'), str):
-				self.producer.send(self.next, result)
-				self.logger.info('Sent to {}'.format(self.next))
+			if hasattr(self, 'next'):
+				for topic in self.next:
+					self.producer.send(topic, result)
+					self.logger.info('Sent to {}'.format(self.next))
 
 			self.logger.debug('TIME TAKEN: {}'.format(time.time() - start_time))
 
