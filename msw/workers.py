@@ -5,19 +5,14 @@ import json
 import time
 import logging
 
+from .core import BaseMicroservice
+
+import zmq
 from kafka import KafkaProducer, KafkaConsumer
 
 
 #-#-----------------------------------------------------------------------------
-logging.basicConfig(
-	format='%(levelname)s:%(asctime)s %(message)s',
-	datefmt='[%Y-%m-%d %H:%M:%S]',
-	level=logging.INFO
-)
-
-
-#-#-----------------------------------------------------------------------------
-class KafkaMicroservice():
+class KafkaMicroservice(BaseMicroservice):
 	def __init__(self):
 
 		assert hasattr(self, 'topic') and isinstance(getattr(self, 'topic'), str),
@@ -25,18 +20,13 @@ class KafkaMicroservice():
 
 		if not hasattr(self, 'ENV'):
 			self.ENV = {}
-
 		self.ENV['MESSAGE_ENCODING'] = os.environ.get('MESSAGE_ENCODING', 'utf-8')
 		self.ENV['KAFKA_SERVERS_STRING'] = os.environ.get('KAFKA_SERVERS_STRING', '')
 
-		for k, v in self.ENV.items():
-			assert v != None, 'Environment not configured correctly. Please set {}'.format(k)
+		super(BaseMicroservice).__init__()
 
 		self.servers = self.ENV['KAFKA_SERVERS_STRING'].split(',')
 		self.message_encoding = self.ENV['MESSAGE_ENCODING']
-		self.logger = logging.getLogger(__name__)
-
-		self.logger.info(self.ENV)
 
 		self.consumer = KafkaConsumer(
 			self.topic,
@@ -64,8 +54,47 @@ class KafkaMicroservice():
 
 			self.logger.debug('TIME TAKEN: {}'.format(time.time() - start_time))
 
-	def job(self, value):
-		raise NotImplementedError('Please create a self.job(value) function')
-
 
 #-#-----------------------------------------------------------------------------
+class ZMQMicroservice(BaseMicroservice):
+	def __init__(self):
+		if not hasattr(self, 'ENV'):
+			self.ENV = {}
+		super(BaseMicroservice).__init__()
+
+		self.context = zmq.Context()
+
+		if self.type == zmq.PULL:
+			self.receiver = self.context.socket(zmq.PULL)
+			self.receiver.connect(getattr(self, 'receiver_url', 'tcp://*:8000'))
+
+			if getattr(self, 'sender_url'):
+				self.sender = self.context.socket(zmq.PUSH)
+				self.sender.connect(self.sender_url)
+
+		else:
+			self.type = zmq.REP
+			self.socket = self.context.socket(zmq.REP)
+			self.socket.bind("tcp://*:8000")
+
+	def run(self):
+		while True:
+			if self.type == zmq.PULL:
+				value = self.receiver.recv_json()
+			else:
+				value = self.socket.recv_json()
+
+			start_time = time.time()
+			self.logger.info('Received message: {}'.format(value))
+
+			result = job(value)
+
+			if self.type == zmq.PULL:
+				if result getattr(self, 'sender'):
+					self.sender.send_json(result)
+					self.logger.info('Sent to {}'.format(self.sender_url))
+			else:
+				self.socket.send_json(result)
+				self.logger.info('Response sent')
+
+			self.logger.debug('TIME TAKEN: {}'.format(time.time() - start_time))
