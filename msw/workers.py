@@ -57,7 +57,7 @@ class KafkaMicroservice():
 
 			result = job(value)
 
-			if hasattr(self, 'next'):
+			if result and hasattr(self, 'next'):
 				for topic in self.next:
 					self.producer.send(topic, result)
 					self.logger.info('Sent to {}'.format(self.next))
