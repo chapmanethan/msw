@@ -6,6 +6,10 @@ Basic scaffolding for a microservice worker. These workers are designed to be ex
 - Kafka
 - ZMQ -->
 
+## Setup
+```bash
+pip3 install git+git://github.com/chapmanethan/msw
+```
 
 ### KafkaMicroservice example:
 ```py
