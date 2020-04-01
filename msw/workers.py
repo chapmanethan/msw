@@ -90,7 +90,7 @@ class ZMQMicroservice(Microservice):
 			result = job(value)
 
 			if self.type == zmq.PULL:
-				if result getattr(self, 'sender'):
+				if result and getattr(self, 'sender'):
 					self.sender.send_json(result)
 					self.logger.info('Sent to {}'.format(self.sender_url))
 			else:
