@@ -23,7 +23,7 @@ class KafkaMicroservice(Microservice):
 		self.ENV['MESSAGE_ENCODING'] = os.environ.get('MESSAGE_ENCODING', 'utf-8')
 		self.ENV['KAFKA_SERVERS_STRING'] = os.environ.get('KAFKA_SERVERS_STRING', '')
 
-		super(BaseMicroservice).__init__()
+		super(Microservice).__init__()
 
 		self.servers = self.ENV['KAFKA_SERVERS_STRING'].split(',')
 		self.message_encoding = self.ENV['MESSAGE_ENCODING']
@@ -60,7 +60,7 @@ class ZMQMicroservice(Microservice):
 	def __init__(self):
 		if not hasattr(self, 'ENV'):
 			self.ENV = {}
-		super(BaseMicroservice).__init__()
+		super(Microservice).__init__()
 
 		self.context = zmq.Context()
 
