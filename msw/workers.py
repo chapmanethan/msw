@@ -15,7 +15,7 @@ from kafka import KafkaProducer, KafkaConsumer
 class KafkaMicroservice(Microservice):
 	def __init__(self):
 
-		assert hasattr(self, 'topic') and isinstance(getattr(self, 'topic'), str),
+		assert hasattr(self, 'topic') and isinstance(getattr(self, 'topic'), str), \
 			'Please set self.topic to a valid string'
 
 		if not hasattr(self, 'ENV'):
