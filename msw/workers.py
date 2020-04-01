@@ -23,8 +23,6 @@ class KafkaMicroservice(Microservice):
 		self.ENV['MESSAGE_ENCODING'] = os.environ.get('MESSAGE_ENCODING', 'utf-8')
 		self.ENV['KAFKA_SERVERS_STRING'] = os.environ.get('KAFKA_SERVERS_STRING', '')
 
-		super(Microservice).__init__()
-
 		self.servers = self.ENV['KAFKA_SERVERS_STRING'].split(',')
 		self.message_encoding = self.ENV['MESSAGE_ENCODING']
 
@@ -37,6 +35,8 @@ class KafkaMicroservice(Microservice):
 			bootstrap_servers=self.servers,
 			value_serializer=lambda m: json.dumps(m).encode(self.message_encoding),
 		)
+		super(Microservice).__init__()
+
 
 	def run(self):
 		for message in self.consumer:
@@ -60,7 +60,6 @@ class ZMQMicroservice(Microservice):
 	def __init__(self):
 		if not hasattr(self, 'ENV'):
 			self.ENV = {}
-		super(Microservice).__init__()
 
 		self.context = zmq.Context()
 
@@ -76,6 +75,8 @@ class ZMQMicroservice(Microservice):
 			self.type = zmq.REP
 			self.socket = self.context.socket(zmq.REP)
 			self.socket.bind("tcp://*:8000")
+
+		super(Microservice).__init__()
 
 	def run(self):
 		while True:
