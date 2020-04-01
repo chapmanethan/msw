@@ -35,7 +35,7 @@ class KafkaMicroservice(Microservice):
 			bootstrap_servers=self.servers,
 			value_serializer=lambda m: json.dumps(m).encode(self.message_encoding),
 		)
-		super(Microservice).__init__()
+		super().__init__()
 
 
 	def run(self):
@@ -76,7 +76,7 @@ class ZMQMicroservice(Microservice):
 			self.socket = self.context.socket(zmq.REP)
 			self.socket.bind("tcp://*:8000")
 
-		super(Microservice).__init__()
+		super().__init__()
 
 	def run(self):
 		while True:
