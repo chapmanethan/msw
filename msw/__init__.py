@@ -1,1 +1,1 @@
-from .workers import KafkaMicroservice
+from .workers import KafkaMicroservice, ZMQMicroservice
