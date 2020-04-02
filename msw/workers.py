@@ -45,7 +45,7 @@ class KafkaMicroservice(Microservice):
 			value = message.value
 			self.logger.info('Received message: {}'.format(value))
 
-			result = job(value)
+			result = self.job(value)
 
 			if result and hasattr(self, 'next'):
 				for topic in self.next:
@@ -88,7 +88,7 @@ class ZMQMicroservice(Microservice):
 			start_time = time.time()
 			self.logger.info('Received message: {}'.format(value))
 
-			result = job(value)
+			result = self.job(value)
 
 			if self.type == zmq.PULL:
 				if result and getattr(self, 'sender'):
